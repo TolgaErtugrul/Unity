@@ -1,0 +1,67 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEditor.SceneManagement;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class SettingsManager : MonoBehaviour
+{
+    [Header(" Elements ")]
+    [SerializeField] private SoundsManager soundsManager;
+    [SerializeField] private Image soundsButtonImage;
+    [SerializeField] private Image vibrationButtonImage;
+    [SerializeField] private Sprite optionsOnSprite;
+    [SerializeField] private Sprite optionsOffSprite;
+
+    [Header(" Settings ")]
+    private bool soundsState = true;
+    private bool vibrationsState = true;
+    // Start is called before the first frame update
+    void Start()
+    {
+        Setup();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+
+    private void Setup()
+    {
+        if (soundsState)
+            DisableSounds();
+        else
+            EnableSounds();
+    }
+
+    public void ChangeSoundState()
+    {
+        if (soundsState)
+            DisableSounds();
+        else
+            EnableSounds();
+
+        soundsState = !soundsState;
+        //save the value of the sounds state
+    }
+
+    private void DisableSounds()
+    {
+        //Tell the sounds manager to set the volume of all the sounds to zero
+        soundsManager.DisableSounds();
+
+        //change the image of the sounds button
+        soundsButtonImage.sprite = optionsOffSprite;
+    }
+
+    private void EnableSounds()
+    {
+        soundsManager.EnableSounds();
+
+
+        //change the image of the sounds button
+        soundsButtonImage.sprite = optionsOnSprite;
+    }
+}
