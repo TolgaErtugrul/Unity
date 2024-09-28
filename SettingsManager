@@ -8,6 +8,7 @@ public class SettingsManager : MonoBehaviour
 {
     [Header(" Elements ")]
     [SerializeField] private SoundsManager soundsManager;
+    [SerializeField] private VibrationManager vibrationManager;
     [SerializeField] private Image soundsButtonImage;
     [SerializeField] private Image vibrationButtonImage;
     [SerializeField] private Sprite optionsOnSprite;
@@ -16,6 +17,13 @@ public class SettingsManager : MonoBehaviour
     [Header(" Settings ")]
     private bool soundsState = true;
     private bool vibrationsState = true;
+
+    private void Awake()
+    {
+        soundsState = PlayerPrefs.GetInt("sounds", 1) == 1;
+        vibrationsState = PlayerPrefs.GetInt("vibrations", 1) == 1;
+
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -31,9 +39,15 @@ public class SettingsManager : MonoBehaviour
     private void Setup()
     {
         if (soundsState)
-            DisableSounds();
-        else
             EnableSounds();
+        else
+            DisableSounds();
+
+        if (vibrationsState)
+            EnableVibrations();
+        else
+            DisableVibrations();
+
     }
 
     public void ChangeSoundState()
@@ -45,6 +59,8 @@ public class SettingsManager : MonoBehaviour
 
         soundsState = !soundsState;
         //save the value of the sounds state
+
+        PlayerPrefs.SetInt("sounds", soundsState ? 1 : 0);
     }
 
     private void DisableSounds()
@@ -60,8 +76,35 @@ public class SettingsManager : MonoBehaviour
     {
         soundsManager.EnableSounds();
 
-
         //change the image of the sounds button
         soundsButtonImage.sprite = optionsOnSprite;
+    }
+
+    public void ChangeVibrationsState()
+    {
+        if (vibrationsState)
+            DisableVibrations();
+        else
+            EnableVibrations();
+
+        vibrationsState = !vibrationsState;
+
+        PlayerPrefs.SetInt("vibrations", vibrationsState ? 1 : 0);
+
+    }
+    private void DisableVibrations()
+    {
+        vibrationManager.DisableVibrations();
+
+        //change the image of the vibrations button
+        vibrationButtonImage.sprite = optionsOffSprite;
+    }
+
+    private void EnableVibrations()
+    {
+        vibrationManager.EnableVibrations();
+
+        //change the image of the vibrations button
+        vibrationButtonImage.sprite = optionsOnSprite;
     }
 }
